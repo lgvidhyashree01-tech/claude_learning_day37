@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Task Compass | The Mobile Transaction Freeze</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .glass-surface {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-surface-high {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .drop-zone-active {
+            border: 2px dashed #ff516a;
+            box-shadow: inset 0 0 20px rgba(255, 81, 106, 0.2), 0 0 15px rgba(255, 81, 106, 0.1);
+        }
+        .role-card-hover:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(76, 215, 246, 0.4);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#2d3449",
+                        "surface-container-high": "#222a3d",
+                        "inverse-on-surface": "#283044",
+                        "background": "#0b1326",
+                        "on-secondary-container": "#00424e",
+                        "on-surface-variant": "#e3bdbf",
+                        "on-secondary-fixed": "#001f26",
+                        "tertiary-container": "#00a572",
+                        "surface": "#0b1326",
+                        "outline-variant": "#5b4041",
+                        "on-tertiary-fixed": "#002113",
+                        "secondary": "#4cd7f6",
+                        "primary-fixed-dim": "#ffb2b7",
+                        "secondary-fixed": "#acedff",
+                        "tertiary": "#4edea3",
+                        "on-primary": "#67001b",
+                        "on-secondary": "#003640",
+                        "primary-fixed": "#ffdadb",
+                        "surface-variant": "#2d3449",
+                        "surface-bright": "#31394d",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "surface-tint": "#ffb2b7",
+                        "secondary-container": "#03b5d3",
+                        "inverse-surface": "#dae2fd",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-tertiary": "#003824",
+                        "error": "#ffb4ab",
+                        "on-primary-container": "#5b0017",
+                        "primary-container": "#ff516a",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface-container-lowest": "#060e20",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-container-low": "#131b2e",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "on-background": "#dae2fd",
+                        "on-primary-fixed-variant": "#92002a",
+                        "on-surface": "#dae2fd",
+                        "on-primary-fixed": "#40000d",
+                        "primary": "#ffb2b7",
+                        "outline": "#aa888a",
+                        "on-tertiary-container": "#00311f",
+                        "surface-container": "#171f33",
+                        "on-error": "#690005",
+                        "inverse-primary": "#bc0b3b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-gap-sm": "8px",
+                        "stack-gap-lg": "32px",
+                        "stack-gap-md": "16px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "margin": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Hanken Grotesk"],
+                        "stat-value": ["Hanken Grotesk"],
+                        "label-mono": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "stat-value": ["20px", {"lineHeight": "1.0", "fontWeight": "600"}],
+                        "label-mono": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen overflow-x-hidden selection:bg-primary/30 selection:text-white">
+<!-- Ambient Shader Background -->
+<div class="fixed inset-0 z-0 pointer-events-none opacity-40">
+
+</div>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full bg-surface/40 backdrop-blur-xl border-b border-white/10 z-50 flex justify-between items-center px-margin h-16 shadow-[0_0_15px_rgba(76,215,246,0.1)]">
+<div class="flex items-center gap-stack-gap-md">
+<span class="material-symbols-outlined text-secondary text-2xl" data-icon="grid_view">grid_view</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold tracking-tighter text-secondary">TASK COMPASS</h1>
+</div>
+<div class="flex items-center gap-stack-gap-md">
+<div class="hidden md:flex gap-4 mr-6">
+<span class="font-label-mono text-label-mono text-secondary tracking-widest px-3 py-1 bg-secondary/10 rounded-full">STAGE_01</span>
+<span class="font-label-mono text-label-mono text-on-surface-variant/70 tracking-widest px-3 py-1">SIM_ACTIVE</span>
+</div>
+<div class="w-10 h-10 rounded-full border border-secondary/30 p-0.5 bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover rounded-full" data-alt="A futuristic professional portrait of a tech operator wearing high-tech sleek interface glasses, glowing cyan details on a dark obsidian background, ultra-realistic digital art style, cinematic lighting, dramatic shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDMP5Vz--S93s0dlC84CWgrF86R6eVb_N9Yx5SyQnCQQ44QWiCD8yRg7v1B4vYsyiC_tLSCn9Ufjy6gaTmLNs1Q8-q2R62-B8OZ43AgmFuQQYGWu7N5jhVbTXT9sF8rMZFgcZbOvX5H0WnFnCs2ulbIrJAC80r8GJix7UGj5U21GWfkFve2yKkMyEEtxuQ_9nxea3KpUg_swdccDxCgcoAGCrXL61-lzeoYUzV6bO-HAN5Lr2I9VO6ZGxPOB0MTC5WrkTorLO3wOU4"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 pt-24 pb-32 px-4 md:px-margin max-w-container-max mx-auto flex flex-col min-h-screen">
+<!-- Level Info & Alert Banner -->
+<section class="mb-12">
+<div class="flex items-center gap-2 mb-4">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse shadow-[0_0_8px_#ff516a]"></span>
+<span class="font-label-mono text-label-mono uppercase tracking-[0.2em] text-primary-container">Critical Alert: Incident #88412</span>
+</div>
+<div class="glass-surface-high p-8 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container shadow-[0_0_15px_#ff516a]"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex-1">
+<h2 class="font-headline-lg text-headline-lg mb-2 text-on-surface">The Mobile Transaction Freeze</h2>
+<p class="text-on-surface-variant font-body-md max-w-2xl text-lg leading-relaxed">
+                            "A critical customer ticket flags that payment transactions instantly lock up exclusively on iOS devices. The checkout button becomes unresponsive upon tap, halting all revenue flow for mobile users."
+                        </p>
+</div>
+<div class="flex flex-col gap-2 shrink-0">
+<div class="flex items-center gap-2 px-4 py-2 bg-black/40 rounded-lg border border-white/5">
+<span class="material-symbols-outlined text-primary-container" data-icon="warning">warning</span>
+<span class="font-label-mono text-label-mono text-primary-container uppercase">Priority: Extreme</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-black/40 rounded-lg border border-white/5">
+<span class="material-symbols-outlined text-secondary" data-icon="schedule">schedule</span>
+<span class="font-label-mono text-label-mono text-secondary uppercase">SLA: 02:44:12</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Drop Zone Area -->
+<section class="flex-grow flex flex-col items-center justify-center mb-16">
+<div class="text-center mb-6">
+<h3 class="font-label-mono text-label-mono text-on-surface-variant/50 uppercase tracking-[0.3em]">Designate Primary Owner</h3>
+</div>
+<div class="w-full max-w-xl h-64 glass-surface rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-white/10 group hover:border-primary-container/40 transition-all duration-500 relative cursor-default" id="ownership-dropzone">
+<div class="absolute inset-0 bg-gradient-to-b from-primary-container/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
+<div class="flex flex-col items-center gap-4 relative z-10 pointer-events-none">
+<div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mb-2">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant/30" data-icon="person_add">person_add</span>
+</div>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface-variant/40">Drag Owner Here</p>
+<p class="font-label-mono text-label-mono text-on-surface-variant/20 italic">Identification Required for Deployment</p>
+</div>
+</div>
+</section>
+<!-- Role Card Deck -->
+<section class="w-full">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile mb-1">Available Fleet</h4>
+<p class="font-label-mono text-label-mono text-on-surface-variant/60">Select and deploy for ownership</p>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 glass-surface flex items-center justify-center rounded-full text-on-surface hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 glass-surface flex items-center justify-center rounded-full text-on-surface hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Horizontal Scrollable Deck -->
+<div class="flex gap-6 overflow-x-auto pb-8 snap-x no-scrollbar">
+<!-- Frontend Dev -->
+<div class="role-card-hover flex-none w-56 h-72 glass-surface p-5 rounded-xl snap-center flex flex-col justify-between transition-all duration-300 cursor-grab active:cursor-grabbing border-l-4 border-l-secondary" draggable="true">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-3xl" data-icon="code">code</span>
+</div>
+<span class="font-label-mono text-[10px] text-secondary/70 border border-secondary/30 px-2 py-0.5 rounded">DEV-01</span>
+</div>
+<h5 class="font-headline-lg-mobile text-xl mb-1">Frontend Dev</h5>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-label-mono">Engineering</p>
+</div>
+<div class="pt-4 border-t border-white/5 space-y-2">
+<div class="flex justify-between text-[10px] font-label-mono">
+<span class="text-on-surface-variant/50">PLATFORM</span>
+<span class="text-secondary">UI/UX CORE</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[85%]"></div>
+</div>
+</div>
+</div>
+<!-- Backend Dev -->
+<div class="role-card-hover flex-none w-56 h-72 glass-surface p-5 rounded-xl snap-center flex flex-col justify-between transition-all duration-300 cursor-grab active:cursor-grabbing border-l-4 border-l-tertiary" draggable="true">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-tertiary/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-3xl" data-icon="database">database</span>
+</div>
+<span class="font-label-mono text-[10px] text-tertiary/70 border border-tertiary/30 px-2 py-0.5 rounded">DEV-02</span>
+</div>
+<h5 class="font-headline-lg-mobile text-xl mb-1">Backend Dev</h5>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-label-mono">Infrastructure</p>
+</div>
+<div class="pt-4 border-t border-white/5 space-y-2">
+<div class="flex justify-between text-[10px] font-label-mono">
+<span class="text-on-surface-variant/50">LATENCY</span>
+<span class="text-tertiary">0.04ms</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[95%]"></div>
+</div>
+</div>
+</div>
+<!-- QA Engineer -->
+<div class="role-card-hover flex-none w-56 h-72 glass-surface p-5 rounded-xl snap-center flex flex-col justify-between transition-all duration-300 cursor-grab active:cursor-grabbing border-l-4 border-l-primary-container" draggable="true">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-3xl" data-icon="biotech">biotech</span>
+</div>
+<span class="font-label-mono text-[10px] text-primary-container/70 border border-primary-container/30 px-2 py-0.5 rounded">QA-04</span>
+</div>
+<h5 class="font-headline-lg-mobile text-xl mb-1">QA Engineer</h5>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-label-mono">Assurance</p>
+</div>
+<div class="pt-4 border-t border-white/5 space-y-2">
+<div class="flex justify-between text-[10px] font-label-mono">
+<span class="text-on-surface-variant/50">PRECISION</span>
+<span class="text-primary-container">ABSOLUTE</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[70%]"></div>
+</div>
+</div>
+</div>
+<!-- Product Manager -->
+<div class="role-card-hover flex-none w-56 h-72 glass-surface p-5 rounded-xl snap-center flex flex-col justify-between transition-all duration-300 cursor-grab active:cursor-grabbing border-l-4 border-l-[#ffb4ab]" draggable="true">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-error/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-3xl" data-icon="strategy">strategy</span>
+</div>
+<span class="font-label-mono text-[10px] text-error/70 border border-error/30 px-2 py-0.5 rounded">PM-01</span>
+</div>
+<h5 class="font-headline-lg-mobile text-xl mb-1">PM</h5>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-label-mono">Strategy</p>
+</div>
+<div class="pt-4 border-t border-white/5 space-y-2">
+<div class="flex justify-between text-[10px] font-label-mono">
+<span class="text-on-surface-variant/50">ROADMAP</span>
+<span class="text-error">V.4.2.0</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-error w-[60%]"></div>
+</div>
+</div>
+</div>
+<!-- UX Designer -->
+<div class="role-card-hover flex-none w-56 h-72 glass-surface p-5 rounded-xl snap-center flex flex-col justify-between transition-all duration-300 cursor-grab active:cursor-grabbing border-l-4 border-l-[#6ffbbe]" draggable="true">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed/20 flex items-center justify-center text-tertiary-fixed">
+<span class="material-symbols-outlined text-3xl" data-icon="brush">brush</span>
+</div>
+<span class="font-label-mono text-[10px] text-tertiary-fixed/70 border border-tertiary-fixed/30 px-2 py-0.5 rounded">UX-09</span>
+</div>
+<h5 class="font-headline-lg-mobile text-xl mb-1">UX Designer</h5>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-label-mono">Design</p>
+</div>
+<div class="pt-4 border-t border-white/5 space-y-2">
+<div class="flex justify-between text-[10px] font-label-mono">
+<span class="text-on-surface-variant/50">FIDELITY</span>
+<span class="text-tertiary-fixed">ULTRA</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed w-[78%]"></div>
+</div>
+</div>
+</div>
+<!-- Support Lead -->
+<div class="role-card-hover flex-none w-56 h-72 glass-surface p-5 rounded-xl snap-center flex flex-col justify-between transition-all duration-300 cursor-grab active:cursor-grabbing border-l-4 border-l-[#acedff]" draggable="true">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-secondary-fixed/20 flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined text-3xl" data-icon="support_agent">support_agent</span>
+</div>
+<span class="font-label-mono text-[10px] text-secondary-fixed/70 border border-secondary-fixed/30 px-2 py-0.5 rounded">SUP-12</span>
+</div>
+<h5 class="font-headline-lg-mobile text-xl mb-1">Support</h5>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-label-mono">Relations</p>
+</div>
+<div class="pt-4 border-t border-white/5 space-y-2">
+<div class="flex justify-between text-[10px] font-label-mono">
+<span class="text-on-surface-variant/50">RESPONSE</span>
+<span class="text-secondary-fixed">INSTANT</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed w-[88%]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final Action CTA -->
+<footer class="mt-auto pt-12 pb-8 flex flex-col items-center">
+<button class="group relative px-12 py-5 bg-primary-container text-on-primary-container font-headline-lg-mobile font-bold rounded-full overflow-hidden shadow-[0_0_20px_rgba(255,81,106,0.3)] transition-all active:scale-95 disabled:opacity-50 disabled:grayscale" id="submit-analysis">
+<span class="relative z-10">SUBMIT ANALYSIS</span>
+<div class="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+</button>
+<p class="mt-4 font-label-mono text-label-mono text-on-surface-variant/40 uppercase tracking-widest">Awaiting Decision Confirmation</p>
+</footer>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-2 bg-black/40 backdrop-blur-[20px] border-t border-white/10 shadow-2xl">
+<a class="flex flex-col items-center justify-center text-secondary bg-secondary/10 rounded-full py-1 px-4 shadow-[0_0_10px_rgba(76,215,246,0.2)] transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span>
+<span class="font-label-mono text-label-mono">Simulation</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-secondary/80 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-mono text-label-mono">Team</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-secondary/80 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-label-mono text-label-mono">Strategy</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-secondary/80 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-mono text-label-mono">Analytics</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interactions for drag and drop
+        const cards = document.querySelectorAll('[draggable="true"]');
+        const dropzone = document.getElementById('ownership-dropzone');
+        const submitBtn = document.getElementById('submit-analysis');
+
+        let draggedCard = null;
+
+        cards.forEach(card => {
+            card.addEventListener('dragstart', (e) => {
+                draggedCard = card;
+                card.style.opacity = '0.5';
+                e.dataTransfer.setData('text/plain', card.querySelector('h5').innerText);
+            });
+
+            card.addEventListener('dragend', () => {
+                card.style.opacity = '1';
+                dropzone.classList.remove('drop-zone-active');
+            });
+        });
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('drop-zone-active');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('drop-zone-active');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const roleName = e.dataTransfer.getData('text/plain');
+            
+            // Visual feedback of drop
+            dropzone.innerHTML = `
+                <div class="flex flex-col items-center animate-pulse-glow">
+                    <div class="w-20 h-20 rounded-full bg-secondary/20 flex items-center justify-center border-2 border-secondary shadow-[0_0_20px_rgba(76,215,246,0.3)] mb-4">
+                        <span class="material-symbols-outlined text-4xl text-secondary" data-icon="verified">verified</span>
+                    </div>
+                    <h3 class="font-headline-lg text-headline-lg text-secondary">${roleName}</h3>
+                    <p class="font-label-mono text-label-mono text-on-surface-variant/80 uppercase mt-2 tracking-widest">Deployed as Primary Owner</p>
+                    <button id="reset-zone" class="mt-4 text-xs font-label-mono text-primary-container border-b border-primary-container hover:text-white transition-colors cursor-pointer">RESET ASSIGNMENT</button>
+                </div>
+            `;
+            
+            // Add reset functionality
+            document.getElementById('reset-zone').addEventListener('click', () => location.reload());
+            
+            // Trigger feedback sound (simulated)
+            console.log("Deployed:", roleName);
+        });
+
+        // Submit Interaction
+        submitBtn.addEventListener('click', () => {
+            submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="refresh">refresh</span> ANALYSIS_UPLOAD_IN_PROGRESS...';
+            setTimeout(() => {
+                submitBtn.classList.replace('bg-primary-container', 'bg-tertiary');
+                submitBtn.classList.replace('text-on-primary-container', 'text-on-tertiary');
+                submitBtn.innerHTML = 'ANALYSIS COMPLETE';
+            }, 1500);
+        });
+    </script>
+</body></html>
